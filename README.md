@@ -2,6 +2,8 @@
 
 A client-side loan repayment calculator that helps you understand and visualize your loan payments over time. Built with vanilla HTML, CSS, and JavaScript — no backend required.
 
+https://beancounting.github.io/Loan_repayment/
+
 ## Features
 
 ### Single Loan Calculator
