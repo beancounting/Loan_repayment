@@ -678,6 +678,133 @@ header h1 {
   font-size: 1rem;
 }
 
+/* Site Navigation */
+.site-nav {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.site-nav-link {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius);
+  transition: background 0.2s, color 0.2s;
+}
+
+.site-nav-link:hover {
+  background: rgba(37, 99, 235, 0.05);
+  color: var(--text);
+}
+
+.site-nav-link.active {
+  color: var(--primary);
+  font-weight: 600;
+  background: rgba(37, 99, 235, 0.08);
+}
+
+/* Form Section Headers */
+.form-section-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.form-section-title:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+/* Input with Toggle (e.g. down payment $ / %) */
+.input-with-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.input-with-toggle input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+}
+
+.input-with-toggle select {
+  width: 80px;
+  flex-shrink: 0;
+  padding: 0.5rem 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+}
+
+/* DTI Indicators */
+.dti-good { color: var(--success); }
+.dti-warning { color: #d97706; }
+.dti-over { color: var(--error); }
+
+/* Payment Breakdown Section */
+.breakdown-section {
+  margin-top: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.breakdown-section h2 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.breakdown-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.chart-container {
+  position: relative;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.breakdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.breakdown-table td {
+  padding: 0.5rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.breakdown-table td:last-child {
+  text-align: right;
+  font-weight: 600;
+}
+
+.breakdown-table tr.total-row td {
+  border-top: 2px solid var(--text);
+  border-bottom: none;
+  font-weight: 700;
+  padding-top: 0.6rem;
+}
+
 /* Footer */
 footer {
   text-align: center;
@@ -702,6 +829,10 @@ footer {
   }
 
   .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .breakdown-grid {
     grid-template-columns: 1fr;
   }
 }

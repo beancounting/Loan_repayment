@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mortgage Affordability Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <nav class="site-nav">
+      <a href="index.html" class="site-nav-link">Loan Calculator</a>
+      <a href="mortgage-affordability.html" class="site-nav-link active">Mortgage Affordability</a>
+    </nav>
+
+    <header>
+      <h1>Mortgage Affordability Calculator</h1>
+    </header>
+
+    <div class="two-col">
+      <div class="input-panel">
+        <h2>Your Details</h2>
+        <form id="affordability-form" novalidate>
+          <h3 class="form-section-title" style="margin-top:0;padding-top:0;border-top:none">Income</h3>
+          <div class="form-group">
+            <label for="annual-income">Annual Gross Income ($)</label>
+            <input type="text" id="annual-income" inputmode="decimal" placeholder="100,000" value="100,000" required>
+            <span class="error-msg"></span>
+          </div>
+
+          <h3 class="form-section-title">Monthly Debts</h3>
+          <div class="form-group">
+            <label for="debt-car">Car Payment ($)</label>
+            <input type="number" id="debt-car" min="0" step="any" placeholder="0" value="0">
+          </div>
+          <div class="form-group">
+            <label for="debt-student">Student Loans ($)</label>
+            <input type="number" id="debt-student" min="0" step="any" placeholder="0" value="0">
+          </div>
+          <div class="form-group">
+            <label for="debt-credit">Credit Card Payments ($)</label>
+            <input type="number" id="debt-credit" min="0" step="any" placeholder="0" value="0">
+          </div>
+          <div class="form-group">
+            <label for="debt-other">Other Monthly Debts ($)</label>
+            <input type="number" id="debt-other" min="0" step="any" placeholder="0" value="0">
+          </div>
+
+          <h3 class="form-section-title">Down Payment</h3>
+          <div class="form-group">
+            <label for="down-payment">Down Payment</label>
+            <div class="input-with-toggle">
+              <input type="text" id="down-payment" inputmode="decimal" placeholder="20" value="20">
+              <select id="down-payment-type">
+                <option value="percent">%</option>
+                <option value="dollar">$</option>
+              </select>
+            </div>
+            <span class="error-msg"></span>
+          </div>
+
+          <h3 class="form-section-title">Loan Details</h3>
+          <div class="form-group">
+            <label for="interest-rate">Interest Rate (%)</label>
+            <input type="number" id="interest-rate" min="0" max="20" step="any" placeholder="6.5" value="6.5" required>
+            <span class="error-msg"></span>
+          </div>
+          <div class="form-group">
+            <label for="loan-term">Loan Term</label>
+            <select id="loan-term">
+              <option value="30">30 years</option>
+              <option value="20">20 years</option>
+              <option value="15">15 years</option>
+            </select>
+          </div>
+
+          <h3 class="form-section-title">Property Costs</h3>
+          <div class="form-group">
+            <label for="property-tax-rate">Annual Property Tax Rate (%)</label>
+            <input type="number" id="property-tax-rate" min="0" max="10" step="any" placeholder="1.2" value="1.2">
+          </div>
+          <div class="form-group">
+            <label for="home-insurance">Annual Homeowner's Insurance ($)</label>
+            <input type="number" id="home-insurance" min="0" step="any" placeholder="1500" value="1500">
+          </div>
+          <div class="form-group">
+            <label for="hoa-fees">Monthly HOA Fees ($)</label>
+            <input type="number" id="hoa-fees" min="0" step="any" placeholder="0" value="0">
+          </div>
+
+          <button type="submit" class="btn-calculate">Calculate</button>
+        </form>
+      </div>
+
+      <div class="results-panel" id="results-panel">
+        <h2>Results</h2>
+        <div id="results-summary" class="results-summary">
+          <p class="placeholder-text">Enter your details and click Calculate to see how much home you can afford.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="breakdown-section" class="breakdown-section hidden">
+      <h2>Monthly Payment Breakdown</h2>
+      <div class="breakdown-grid">
+        <div class="chart-container">
+          <canvas id="payment-chart"></canvas>
+        </div>
+        <div id="breakdown-table-container"></div>
+      </div>
+    </div>
+
+    <div class="help-content" style="margin-top:1.5rem">
+      <h3 style="margin-top:0">How It Works</h3>
+      <p>This calculator estimates the maximum home price you can afford based on conventional lending guidelines.</p>
+
+      <h3>Debt-to-Income (DTI) Ratios</h3>
+      <p>Lenders use two DTI ratios to determine how much you can borrow:</p>
+      <ul>
+        <li><strong>Front-End Ratio (28%):</strong> Your total housing costs (mortgage payment, taxes, insurance, HOA, PMI) should not exceed 28% of your gross monthly income.</li>
+        <li><strong>Back-End Ratio (36%):</strong> Your total housing costs plus all other debts should not exceed 36% of your gross monthly income.</li>
+      </ul>
+      <p>The calculator uses whichever ratio is more restrictive to determine your maximum affordable home price.</p>
+
+      <h3>Private Mortgage Insurance (PMI)</h3>
+      <p>If your down payment is less than 20% of the home price, lenders typically require PMI. This calculator estimates PMI at 0.7% of the loan amount per year. PMI is included in the DTI calculation, which reduces your maximum affordable price.</p>
+    </div>
+
+    <footer>
+      <p>Mortgage Affordability Calculator &mdash; For educational purposes only.</p>
+    </footer>
+  </div>
+
+  <script src="mortgage-affordability.js"></script>
+</body>
+</html>
