@@ -12,6 +12,16 @@ function formatCurrency(value) {
   });
 }
 
+function parseLoanAmount(str) {
+  return parseFloat(String(str).replace(/,/g, ''));
+}
+
+function formatLoanAmountInput(value) {
+  var num = parseLoanAmount(value);
+  if (isNaN(num)) return value;
+  return Math.round(num).toLocaleString('en-US');
+}
+
 function getPeriodsPerYear(frequency) {
   switch (frequency) {
     case 'biweekly': return 26;
@@ -435,7 +445,7 @@ function renderComparison(summaries) {
 // ── Input Validation ─────────────────────────────────────────
 
 function validateField(input, min, max) {
-  var val = parseFloat(input.value);
+  var val = parseLoanAmount(input.value);
   var err = input.parentElement.querySelector('.error-msg');
   if (isNaN(val) || val < min || (max !== undefined && val > max)) {
     input.classList.add('invalid');
@@ -452,7 +462,9 @@ function validateField(input, min, max) {
 function handleCalculate(e) {
   e.preventDefault();
 
-  var amount = validateField(document.getElementById('loan-amount'), 1);
+  var amountInput = document.getElementById('loan-amount');
+  amountInput.value = formatLoanAmountInput(amountInput.value);
+  var amount = validateField(amountInput, 1);
   var rate = validateField(document.getElementById('interest-rate'), 0, 100);
   var term = validateField(document.getElementById('loan-term'), 1, 50);
 
@@ -590,6 +602,11 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('show-all-rows').addEventListener('click', handleShowAllRows);
   document.getElementById('download-csv').addEventListener('click', handleDownloadCSV);
   document.getElementById('compare-btn').addEventListener('click', handleCompare);
+
+  // Format loan amount with commas on blur
+  document.getElementById('loan-amount').addEventListener('blur', function() {
+    this.value = formatLoanAmountInput(this.value);
+  });
 
   document.querySelectorAll('.tab').forEach(function(tab) {
     tab.addEventListener('click', handleTabSwitch);
