@@ -376,6 +376,38 @@ header h1 {
 .bar-legend .leg-interest::before { background: var(--accent-3); }
 .bar-legend .leg-extra::before { background: var(--success); }
 
+/* Loan Graph */
+.loan-graph-section {
+  margin-top: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.graph-header {
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.graph-header h2 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.graph-container {
+  position: relative;
+  height: 350px;
+}
+
+@media (max-width: 768px) {
+  .graph-container {
+    height: 250px;
+  }
+}
+
 /* Amortization Table */
 .amortization-section {
   margin-top: 1.5rem;

@@ -159,6 +159,129 @@ function scheduleToCSV(schedule) {
 
 var fullSchedule = null;
 var oneTimeExtras = [];
+var loanChart = null;
+
+function renderLoanGraph(rows) {
+  var section = document.getElementById('loan-graph-section');
+  if (!rows || rows.length === 0) {
+    section.classList.add('hidden');
+    return;
+  }
+  section.classList.remove('hidden');
+
+  // Sample data points to keep chart readable (max ~60 points)
+  var step = Math.max(1, Math.floor(rows.length / 60));
+  var labels = [];
+  var balanceData = [];
+  var cumulativePrincipalData = [];
+  var cumulativeInterestData = [];
+  var cumPrincipal = 0;
+  var cumInterest = 0;
+
+  for (var i = 0; i < rows.length; i++) {
+    cumPrincipal += rows[i].principal + rows[i].extra;
+    cumInterest += rows[i].interest;
+    if (i % step === 0 || i === rows.length - 1) {
+      labels.push(rows[i].date);
+      balanceData.push(parseFloat(rows[i].balance.toFixed(2)));
+      cumulativePrincipalData.push(parseFloat(cumPrincipal.toFixed(2)));
+      cumulativeInterestData.push(parseFloat(cumInterest.toFixed(2)));
+    }
+  }
+
+  var ctx = document.getElementById('loan-graph').getContext('2d');
+
+  if (loanChart) {
+    loanChart.destroy();
+  }
+
+  loanChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Remaining Balance',
+          data: balanceData,
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37, 99, 235, 0.1)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 0,
+          borderWidth: 2
+        },
+        {
+          label: 'Cumulative Principal Paid',
+          data: cumulativePrincipalData,
+          borderColor: '#16a34a',
+          backgroundColor: 'rgba(22, 163, 74, 0.1)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 0,
+          borderWidth: 2
+        },
+        {
+          label: 'Cumulative Interest Paid',
+          data: cumulativeInterestData,
+          borderColor: '#ea580c',
+          backgroundColor: 'rgba(234, 88, 12, 0.1)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 0,
+          borderWidth: 2
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
+            }
+          }
+        },
+        legend: {
+          position: 'bottom',
+          labels: {
+            usePointStyle: true,
+            padding: 16
+          }
+        }
+      },
+      scales: {
+        x: {
+          display: true,
+          ticks: {
+            maxTicksLimit: 8,
+            maxRotation: 45
+          },
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          display: true,
+          ticks: {
+            callback: function(value) {
+              if (value >= 1000) return '$' + (value / 1000).toFixed(0) + 'k';
+              return '$' + value;
+            }
+          },
+          grid: {
+            color: 'rgba(0,0,0,0.06)'
+          }
+        }
+      }
+    }
+  });
+}
 
 function renderSummary(summary, baselineSummary) {
   var html = '<div class="summary-grid">';
@@ -351,6 +474,7 @@ function handleCalculate(e) {
 
   renderSummary(schedule.summary, baseline ? baseline.summary : null);
   renderBarChart(schedule.summary, baseline ? baseline.summary : null);
+  renderLoanGraph(schedule.rows);
   renderAmortTable(schedule.rows, 60);
 }
 

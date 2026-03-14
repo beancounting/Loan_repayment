@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Loan Repayment Calculator</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -84,6 +85,15 @@
             <p class="placeholder-text">Enter loan details and click Calculate to see results.</p>
           </div>
           <div id="bar-chart" class="bar-chart"></div>
+        </div>
+      </div>
+
+      <div id="loan-graph-section" class="loan-graph-section hidden">
+        <div class="graph-header">
+          <h2>Loan Balance Over Time</h2>
+        </div>
+        <div class="graph-container">
+          <canvas id="loan-graph"></canvas>
         </div>
       </div>
 
