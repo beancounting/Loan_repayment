@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan Repayment Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Loan Repayment Calculator</h1>
+    </header>
+
+    <nav class="tab-bar" role="tablist">
+      <button class="tab active" data-tab="single" role="tab" aria-selected="true">Single Loan</button>
+      <button class="tab" data-tab="compare" role="tab" aria-selected="false">Loan Comparison</button>
+      <button class="tab" data-tab="help" role="tab" aria-selected="false">How It Works</button>
+    </nav>
+
+    <!-- Single Loan Tab -->
+    <section id="tab-single" class="tab-content active">
+      <div class="two-col">
+        <div class="input-panel">
+          <h2>Loan Details</h2>
+          <form id="loan-form" novalidate>
+            <div class="form-group">
+              <label for="loan-amount">Loan Amount ($)</label>
+              <input type="number" id="loan-amount" min="1" step="any" placeholder="200000" required>
+              <span class="error-msg"></span>
+            </div>
+            <div class="form-group">
+              <label for="interest-rate">Annual Interest Rate (%)</label>
+              <input type="number" id="interest-rate" min="0" max="100" step="any" placeholder="6.0" required>
+              <span class="error-msg"></span>
+            </div>
+            <div class="form-group">
+              <label for="loan-term">Loan Term (years)</label>
+              <input type="number" id="loan-term" min="1" max="50" step="1" placeholder="30" required>
+              <span class="error-msg"></span>
+            </div>
+            <div class="form-group">
+              <label for="payment-frequency">Payment Frequency</label>
+              <select id="payment-frequency">
+                <option value="monthly">Monthly</option>
+                <option value="biweekly">Bi-weekly</option>
+                <option value="weekly">Weekly</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="loan-type">Loan Type</label>
+              <select id="loan-type">
+                <option value="pi">Principal &amp; Interest</option>
+                <option value="io">Interest Only</option>
+              </select>
+            </div>
+
+            <div class="extra-payments-section">
+              <button type="button" id="toggle-extras" class="toggle-btn">+ Extra Payments</button>
+              <div id="extras-panel" class="extras-panel hidden">
+                <div class="form-group">
+                  <label for="extra-per-period">Extra per Payment Period ($)</label>
+                  <input type="number" id="extra-per-period" min="0" step="any" placeholder="0">
+                </div>
+                <div class="one-time-extras">
+                  <h3>One-Time Extra Payments</h3>
+                  <div class="one-time-form">
+                    <input type="number" id="one-time-payment-num" min="1" step="1" placeholder="Payment #">
+                    <input type="number" id="one-time-amount" min="1" step="any" placeholder="Amount ($)">
+                    <button type="button" id="add-one-time">Add</button>
+                  </div>
+                  <div id="one-time-chips" class="chips"></div>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-calculate">Calculate</button>
+          </form>
+        </div>
+
+        <div class="results-panel" id="results-panel">
+          <h2>Results</h2>
+          <div id="results-summary" class="results-summary">
+            <p class="placeholder-text">Enter loan details and click Calculate to see results.</p>
+          </div>
+          <div id="bar-chart" class="bar-chart"></div>
+        </div>
+      </div>
+
+      <div id="amortization-section" class="amortization-section hidden">
+        <div class="amort-header">
+          <h2>Amortization Schedule</h2>
+          <button type="button" id="download-csv" class="btn-csv">Download CSV</button>
+        </div>
+        <div class="table-wrapper">
+          <table id="amort-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Payment</th>
+                <th>Principal</th>
+                <th>Interest</th>
+                <th>Extra</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+            <tbody id="amort-body"></tbody>
+          </table>
+        </div>
+        <button type="button" id="show-all-rows" class="btn-show-all hidden">Show All Rows</button>
+      </div>
+    </section>
+
+    <!-- Loan Comparison Tab -->
+    <section id="tab-compare" class="tab-content">
+      <h2>Compare Up to 3 Loans</h2>
+      <div class="compare-cards">
+        <div class="compare-card">
+          <h3>Loan 1</h3>
+          <label>Amount ($) <input type="number" class="cmp-amount" placeholder="200000"></label>
+          <label>Rate (%) <input type="number" class="cmp-rate" placeholder="6.0"></label>
+          <label>Term (yrs) <input type="number" class="cmp-term" placeholder="30"></label>
+          <label>Frequency
+            <select class="cmp-freq">
+              <option value="monthly">Monthly</option>
+              <option value="biweekly">Bi-weekly</option>
+              <option value="weekly">Weekly</option>
+            </select>
+          </label>
+          <label>Type
+            <select class="cmp-type">
+              <option value="pi">P&amp;I</option>
+              <option value="io">Interest Only</option>
+            </select>
+          </label>
+        </div>
+        <div class="compare-card">
+          <h3>Loan 2</h3>
+          <label>Amount ($) <input type="number" class="cmp-amount" placeholder="200000"></label>
+          <label>Rate (%) <input type="number" class="cmp-rate" placeholder="5.5"></label>
+          <label>Term (yrs) <input type="number" class="cmp-term" placeholder="15"></label>
+          <label>Frequency
+            <select class="cmp-freq">
+              <option value="monthly">Monthly</option>
+              <option value="biweekly">Bi-weekly</option>
+              <option value="weekly">Weekly</option>
+            </select>
+          </label>
+          <label>Type
+            <select class="cmp-type">
+              <option value="pi">P&amp;I</option>
+              <option value="io">Interest Only</option>
+            </select>
+          </label>
+        </div>
+        <div class="compare-card">
+          <h3>Loan 3</h3>
+          <label>Amount ($) <input type="number" class="cmp-amount" placeholder="150000"></label>
+          <label>Rate (%) <input type="number" class="cmp-rate" placeholder="7.0"></label>
+          <label>Term (yrs) <input type="number" class="cmp-term" placeholder="30"></label>
+          <label>Frequency
+            <select class="cmp-freq">
+              <option value="monthly">Monthly</option>
+              <option value="biweekly">Bi-weekly</option>
+              <option value="weekly">Weekly</option>
+            </select>
+          </label>
+          <label>Type
+            <select class="cmp-type">
+              <option value="pi">P&amp;I</option>
+              <option value="io">Interest Only</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <button type="button" id="compare-btn" class="btn-calculate">Compare</button>
+      <div id="compare-results" class="compare-results hidden">
+        <table id="compare-table">
+          <thead><tr><th>Metric</th><th>Loan 1</th><th>Loan 2</th><th>Loan 3</th></tr></thead>
+          <tbody id="compare-body"></tbody>
+        </table>
+        <div id="compare-chart" class="compare-chart"></div>
+      </div>
+    </section>
+
+    <!-- How It Works Tab -->
+    <section id="tab-help" class="tab-content">
+      <h2>How It Works</h2>
+      <div class="help-content">
+        <h3>Principal &amp; Interest (P&amp;I)</h3>
+        <p>Each payment covers both interest on the remaining balance and a portion of the principal. The fixed payment is calculated using the amortization formula:</p>
+        <p class="formula">M = P &times; [r(1+r)<sup>n</sup>] / [(1+r)<sup>n</sup> &minus; 1]</p>
+        <p>Where <strong>P</strong> = principal, <strong>r</strong> = per-period interest rate, <strong>n</strong> = total number of payments.</p>
+
+        <h3>Interest Only</h3>
+        <p>Each payment covers only the interest. The principal balance remains unchanged throughout the loan term, with the full principal due as a balloon payment at the end.</p>
+        <p class="formula">M = P &times; r</p>
+
+        <h3>Payment Frequencies</h3>
+        <ul>
+          <li><strong>Monthly:</strong> 12 payments per year</li>
+          <li><strong>Bi-weekly:</strong> 26 payments per year (equivalent to roughly 13 monthly payments)</li>
+          <li><strong>Weekly:</strong> 52 payments per year</li>
+        </ul>
+        <p>Choosing bi-weekly or weekly payments effectively makes extra payments each year, reducing total interest and shortening the loan term for P&amp;I loans.</p>
+
+        <h3>Extra Payments</h3>
+        <p>Any extra payment goes directly toward reducing the principal balance. This reduces the interest charged on future payments and can significantly shorten the loan term. Extra payments work with both P&amp;I and Interest Only loans.</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>Loan Repayment Calculator &mdash; For educational purposes only.</p>
+    </footer>
+  </div>
+
+  <script src="calculator.js"></script>
+</body>
+</html>
